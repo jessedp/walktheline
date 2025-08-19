@@ -1,0 +1,25 @@
+# Node.js dependencies
+node_modules/
+
+# Web-ext build artifacts
+web-ext-artifacts/
+*.zip
+*.xpi
+
+# macOS specific files
+.DS_Store
+
+# Windows specific files
+Thumbs.db
+
+# Editor specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+
+# Temporary files
+*~

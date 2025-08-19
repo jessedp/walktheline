@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Geo Debugger</title>
+  <link rel="stylesheet" href="panel.css" />
+</head>
+<body>
+  <div id="root">
+    <section class="toolbar">
+      <button id="enable">Enable for this tab</button>
+      <button id="disable">Disable</button>
+      <button id="reset">Reset to System GPS</button>
+      <span class="status" id="status">Disabled</span>
+      <div id="status-indicator" class="status-indicator-red"></div>
+      <div id="status-history" class="status-history-container"></div>
+    </section>
+
+    <section class="map-section">
+      <div class="map-toolbar">
+        <button id="map_center">Center on current</button>
+        <button id="map_clear_path">Clear path</button>
+        <span class="map-hint">Drag to pan, wheel to zoom, click to set marker.</span>
+      </div>
+      <div id="mapwrap">
+        <canvas id="map"></canvas>
+      </div>
+    </section>
+
+    <section class="loc-entry">
+      <h3>Set Location</h3>
+      <div class="row">
+        <label>Latitude <input type="number" step="0.000001" id="lat"></label>
+        <label>Longitude <input type="number" step="0.000001" id="lng"></label>
+        <label>Accuracy (m) <input type="number" step="1" id="acc" value="15"></label>
+        <button id="setpos">Set</button>
+      </div>
+      <div class="row">
+        <input type="text" id="name" placeholder="Save as name">
+        <button id="save">Save Location</button>
+      </div>
+      <div class="row">
+        <select id="saved"></select>
+        <button id="use_saved">Use Selected</button>
+        <button id="delete_saved">Delete</button>
+      </div>
+    </section>
+
+    <section class="walk">
+      <h3>Walk Simulation</h3>
+      <div class="row">
+        <label>Direction
+          <select id="direction">
+            <option value="N">N</option>
+            <option value="S">S</option>
+            <option value="E">E</option>
+            <option value="W">W</option>
+          </select>
+        </label>
+        <label>Interval (sec)
+          <select id="interval">
+            <option value="3">3</option>
+            <option value="5" selected>5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+          </select>
+        </label>
+        <label>Step size (ft) <input type="number" id="stepft" value="30"></label>
+      </div>
+      <div class="row">
+        <button id="start">Start Auto-Walk</button>
+        <button id="stop">Stop</button>
+        <button id="step">Step Once</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="panel.js"></script>
+</body>
+</html>

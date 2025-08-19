@@ -1,0 +1,43 @@
+{
+  "manifest_version": 2,
+  "name": "Geolocation Debugger (Per-Tab)",
+  "version": "0.1.0",
+  "description": "Manual geolocation spoofing with per-tab control, walking simulation, and saved locations.",
+  "permissions": [
+    "storage",
+    "tabs",
+    "<all_urls>"
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "geo-debugger@example.com",
+      "strict_min_version": "109.0"
+    }
+  },
+  "devtools_page": "devtools/devtools.html",
+  "background": {
+    "scripts": [
+      "background/background.js"
+    ],
+    "persistent": true
+  },
+  "icons": {
+    "48": "icon48.png",
+    "96": "icon96.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content/content-bridge.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+  "web_accessible_resources": [
+    "content/page-script.js"
+  ]
+}
