@@ -1,6 +1,5 @@
 
 (function() {
-    const originalGeolocation = navigator.geolocation;
     let currentPosition = {
         coords: {
             latitude: 0,
@@ -35,15 +34,37 @@
         watchers.delete(watchId);
     }
 
+    // Store original Geolocation object
+    const originalGeolocation = navigator.geolocation;
+
+    // Create a proxy handler
+    const geolocationProxyHandler = {
+        get(target, prop, receiver) {
+            if (prop === 'getCurrentPosition') {
+                return getCurrentPosition;
+            }
+            if (prop === 'watchPosition') {
+                return watchPosition;
+            }
+            if (prop === 'clearWatch') {
+                return clearWatch;
+            }
+            // Fallback to the original property for anything else
+            return Reflect.get(target, prop, receiver);
+        }
+    };
+
+    // Create the proxy
+    const geolocationProxy = new Proxy(originalGeolocation, geolocationProxyHandler);
+
+    // Replace navigator.geolocation with the proxy
     Object.defineProperty(navigator, 'geolocation', {
-        value: {
-            getCurrentPosition: getCurrentPosition,
-            watchPosition: watchPosition,
-            clearWatch: clearWatch
-        },
+        value: geolocationProxy,
         writable: false,
         configurable: true
     });
+
+    console.log('WalkTheLine: navigator.geolocation overridden with Proxy');
 
     console.log('WalkTheLine: navigator.geolocation overridden');
 
