@@ -17,12 +17,10 @@
     let nextWatchId = 1;
 
     function getCurrentPosition(successCallback, errorCallback, options) {
-        console.log('WalkTheLine: getCurrentPosition called');
         successCallback(currentPosition);
     }
 
     function watchPosition(successCallback, errorCallback, options) {
-        console.log('WalkTheLine: watchPosition called');
         const watchId = nextWatchId++;
         watchers.set(watchId, successCallback);
         successCallback(currentPosition);
@@ -30,7 +28,6 @@
     }
 
     function clearWatch(watchId) {
-        console.log('WalkTheLine: clearWatch called', watchId);
         watchers.delete(watchId);
     }
 
@@ -66,12 +63,11 @@
 
     console.log('WalkTheLine: navigator.geolocation overridden with Proxy');
 
-    console.log('WalkTheLine: navigator.geolocation overridden');
+    
 
     // Listen for messages from the content script to update the position
     window.addEventListener('message', (event) => {
         if (event.source === window && event.data.type === 'WALKTHELINE_UPDATE_POSITION') {
-            console.log('WalkTheLine: Received update position message', event.data.payload);
             currentPosition = {
                 coords: {
                     latitude: event.data.payload.latitude,

@@ -380,7 +380,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const intervalSec = parseInt($("interval").value, 10);
     const stepFt = parseFloat($("stepft").value) || 30;
     const stepMeters = stepFt * FOOT_TO_METER;
-    await sendToBackground({ type:"START_WALK", direction: dir, intervalSec, stepMeters });
+    const timeLimitSec = parseInt($("timeLimit").value, 10);
+    await sendToBackground({ type:"START_WALK", direction: dir, intervalSec, stepMeters, timeLimitSec });
     const statusText = `Walking ${dir} every ${intervalSec}s`;
     setStatus(statusText);
     appendStatusToHistory(statusText);
@@ -407,6 +408,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // Map controls
   $("map_center").addEventListener("click", () => map.centerOnMarker());
   $("map_clear_path").addEventListener("click", () => map.clearPath());
+});
+
+// Listen for messages from the background script
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.source === "background" && msg.type === "WALK_STOPPED_AUTO") {
+    if (msg.tabId === getInspectedTabId()) {
+      setStatus("Stopped (Time Limit)");
+      appendStatusToHistory("Stopped (Time Limit)");
+    }
+  }
 });
 
 // Listen to background updates to update map marker/path in panel (via background->content->page->watchPosition

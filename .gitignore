@@ -6,6 +6,9 @@ web-ext-artifacts/
 *.zip
 *.xpi
 
+# Build directory
+build/
+
 # macOS specific files
 .DS_Store
 

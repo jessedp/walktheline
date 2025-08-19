@@ -82,7 +82,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     }
     if (msg.type === "START_WALK") {
       if (!enabledTabs.has(tabId)) { sendResponse({ok:false, error:"Not enabled"}); return true; }
-      const { direction, intervalSec, stepMeters } = msg;
+      const { direction, intervalSec, stepMeters, timeLimitSec } = msg;
       const accuracy = msg.accuracy || 15; // default smartphone-like accuracy
       if (!tabState[tabId].position) { sendResponse({ok:false, error:"No starting position"}); return true; }
 
@@ -92,12 +92,25 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       w.direction = direction;
       w.stepMeters = stepMeters;
       w.timerId && clearInterval(w.timerId);
+      w.timeoutId && clearTimeout(w.timeoutId);
+
       w.timerId = setInterval(() => {
         const p = tabState[tabId].position;
         const moved = moveStep(p.lat, p.lng, w.stepMeters, w.direction);
         tabState[tabId].position = { lat: moved.lat, lng: moved.lng, accuracy };
         chrome.tabs.sendMessage(tabId, { source:"background", type:"UPDATE_POSITION", position: { latitude: moved.lat, longitude: moved.lng, accuracy: accuracy } });
       }, w.intervalMs);
+
+      if (timeLimitSec > 0) {
+        w.timeoutId = setTimeout(() => {
+          const currentTabId = tabId;
+          const currentW = tabState[currentTabId]?.watch;
+          if (currentW && currentW.timerId) clearInterval(currentW.timerId);
+          if (tabState[currentTabId]) tabState[currentTabId].watch = null;
+          chrome.runtime.sendMessage({ source: "background", type: "WALK_STOPPED_AUTO", tabId: currentTabId });
+        }, timeLimitSec * 1000);
+      }
+
       tabState[tabId].watch = w;
       sendResponse({ ok:true });
       return true;
@@ -105,6 +118,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (msg.type === "STOP_WALK") {
       const w = tabState[tabId]?.watch;
       if (w && w.timerId) clearInterval(w.timerId);
+      if (w && w.timeoutId) clearTimeout(w.timeoutId);
       if (tabState[tabId]) tabState[tabId].watch = null;
       sendResponse({ ok:true });
       return true;
