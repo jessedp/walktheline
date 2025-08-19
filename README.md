@@ -2,6 +2,10 @@
 
 WalkTheLine: Geolocation Debugger for Firefox. A powerful extension for developers and testers to debug geolocation-dependent web applications. Easily spoof your browser's reported location, set fixed coordinates, or simulate movement (walking) with customizable speed and direction. Control everything from a dedicated DevTools panel, including saving frequently used locations. Ideal for testing location-aware features without physical travel. Transparent and user-friendly.
 
+[Download in the Firefox Browser Add-ons Store](https://addons.mozilla.org/en-US/firefox/addon/walktheline-gps-simulator/)
+
+
+
 ![WalkTheLine Screenshot](logo_images/screenshot.png)
 
 
